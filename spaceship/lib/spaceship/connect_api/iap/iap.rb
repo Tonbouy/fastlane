@@ -210,7 +210,7 @@ module Spaceship
           }
 
           entry_count = 1
-          [in_app_purchase_price_point_id].each do |in_app_purchase_price_point_id|
+          in_app_purchase_price_point_id.each do |in_app_purchase_price_point_id|
             create_id = "${price#{entry_count}}"
 
             # Add to relationships
