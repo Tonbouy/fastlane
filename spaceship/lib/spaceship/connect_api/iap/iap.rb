@@ -210,7 +210,7 @@ module Spaceship
           }
 
           entry_count = 1
-          in_app_purchase_price_point_id.each do |in_app_purchase_price_point_id|
+          [in_app_purchase_price_point_id].each do |in_app_purchase_price_point_id|
             create_id = "${price#{entry_count}}"
 
             # Add to relationships
@@ -240,6 +240,64 @@ module Spaceship
                     type: 'inAppPurchases'
                   }
                 },
+                inAppPurchasePricePoint: {
+                  data: {
+                    id: in_app_purchase_price_point_id,
+                    type: 'inAppPurchasePricePoints'
+                  }
+                }
+              }
+            }
+
+            entry_count += 1
+          end
+
+          iap_request_client.post('inAppPurchasePriceSchedules', params)
+        end
+
+        # Apple Developer API Docs: https://developer.apple.com/documentation/appstoreconnectapi/add_a_scheduled_price_change_to_an_in-app_purchase
+        def create_multiple_in_app_purchase_price_schedule(purchase_id:, in_app_purchase_price_point_ids:, start_date: nil, base_territory:)
+          params = {
+            data: {
+              type: 'inAppPurchasePriceSchedules',
+              attributes: {},
+              relationships: {
+                inAppPurchase: {
+                  data: {
+                    id: purchase_id,
+                    type: 'inAppPurchases'
+                  }
+                },
+                baseTerritory: {
+                  data: {
+                    id: base_territory,
+                    type: "territories"
+                  }
+                },
+                manualPrices: {
+                  data: [] # Filled with loop below
+                }
+              }
+            },
+            included: [] # Filled with loop below
+          }
+
+          entry_count = 0
+          in_app_purchase_price_point_ids.each do |in_app_purchase_price_point_id|
+            create_id = "${newprice-#{entry_count}}"
+
+            # Add to relationships
+            params[:data][:relationships][:manualPrices][:data] << { id: create_id, type: 'inAppPurchasePrices' }
+
+            # Add to included
+            attributes = {}
+            attributes[:startDate] = nil
+
+            params[:included] << {
+              id: create_id,
+              type: 'inAppPurchasePrices',
+              attributes: attributes,
+              relationships: {
                 inAppPurchasePricePoint: {
                   data: {
                     id: in_app_purchase_price_point_id,
