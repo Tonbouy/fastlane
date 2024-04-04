@@ -30,7 +30,7 @@ module Spaceship
         end
 
         # Apple Developer API docs: https://developer.apple.com/documentation/appstoreconnectapi/create_an_in-app_purchase
-        def create_in_app_purchase(app_id:, name:, product_id:, in_app_purchase_type:, review_note: nil, family_sharable: nil, available_in_all_territories: nil)
+        def create_in_app_purchase(app_id:, name:, product_id:, in_app_purchase_type:, review_note: nil, family_sharable: nil)
           attributes = {
             name: name,
             productId: product_id,
@@ -38,7 +38,6 @@ module Spaceship
           }
 
           # Optional Params
-          attributes[:availableInAllTerritories] = available_in_all_territories unless available_in_all_territories.nil?
           attributes[:familySharable] = family_sharable unless family_sharable.nil?
           attributes[:reviewNote] = review_note unless review_note.nil?
 
@@ -62,14 +61,13 @@ module Spaceship
         end
 
         # Apple Developer API Docs: https://developer.apple.com/documentation/appstoreconnectapi/modify_an_in-app_purchase
-        def update_in_app_purchase(purchase_id:, name: nil, review_note: nil, family_sharable: nil, available_in_all_territories: nil)
+        def update_in_app_purchase(purchase_id:, name: nil, review_note: nil, family_sharable: nil)
           attributes = {}
 
           # Optional attributes
           attributes[:name] = name unless name.nil?
           attributes[:reviewNote] = review_note unless review_note.nil?
           attributes[:familySharable] = family_sharable unless family_sharable.nil?
-          attributes[:availableInAllTerritories] = available_in_all_territories unless available_in_all_territories.nil?
 
           params = {
             data: {
@@ -355,6 +353,39 @@ module Spaceship
           }
 
           iap_request_client.patch("inAppPurchaseAppStoreReviewScreenshots/#{screenshot_id}", params)
+        end
+
+        def update_territory_availabilities(purchase_id:, territory_ids:)
+          attributes = {}
+          attributes[:availableInNewTerritories] = false
+          params = {
+            data: {
+              type: "inAppPurchaseAvailabilities",
+              attributes: attributes,
+              relationships: {
+                availableTerritories: {
+                  data: [] # Filled with loop below
+                },
+                inAppPurchase: {
+                  data: {
+                    id: purchase_id,
+                    type: "inAppPurchases"
+                  }
+                }
+              }
+            }
+          }
+
+          territory_ids.each do |territory_id|
+            territoryBody = {
+              type: "territories",
+              id: territory_id
+            }
+
+            params[:data][:relationships][:availableTerritories][:data] << territoryBody
+          end
+
+          iap_request_client.post("https://api.appstoreconnect.apple.com/v1/inAppPurchaseAvailabilities", params)
         end
 
         def delete_in_app_purchase_app_store_review_screenshot(screenshot_id:)
