@@ -505,16 +505,16 @@ module Spaceship
       end
 
       # Apple Developer API docs: https://developer.apple.com/documentation/appstoreconnectapi/list_all_in-app_purchases_for_an_app
-      def create_in_app_purchase(client: nil, name:, product_id:, in_app_purchase_type:, review_note: nil, family_sharable: nil, available_in_all_territories: nil)
+      def create_in_app_purchase(client: nil, name:, product_id:, in_app_purchase_type:, review_note: nil, family_sharable: nil)
         client ||= Spaceship::ConnectAPI
-        resps = client.create_in_app_purchase(app_id: id, name: name, product_id: product_id, in_app_purchase_type: in_app_purchase_type, review_note: review_note, family_sharable: family_sharable, available_in_all_territories: available_in_all_territories)
+        resps = client.create_in_app_purchase(app_id: id, name: name, product_id: product_id, in_app_purchase_type: in_app_purchase_type, review_note: review_note, family_sharable: family_sharable)
         return resps.to_models.first
       end
 
       # Apple Developer API Docs: https://developer.apple.com/documentation/appstoreconnectapi/modify_an_in-app_purchase
-      def update_in_app_purchase(client: nil, purchase_id:, name: nil, review_note: nil, family_sharable: nil, available_in_all_territories: nil)
+      def update_in_app_purchase(client: nil, purchase_id:, name: nil, review_note: nil, family_sharable: nil)
         client ||= Spaceship::ConnectAPI
-        resps = client.update_in_app_purchase(purchase_id: purchase_id, name: name, review_note: review_note, family_sharable: family_sharable, available_in_all_territories: available_in_all_territories)
+        resps = client.update_in_app_purchase(purchase_id: purchase_id, name: name, review_note: review_note, family_sharable: family_sharable)
         return resps.to_models.first
       end
 
