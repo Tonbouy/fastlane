@@ -360,27 +360,23 @@ module Spaceship
           attributes[:availableInNewTerritories] = false
           params = {
             data: {
-              "data" : {
-                "type" : "inAppPurchaseAvailabilities",
-                "id" : "#{purchase_id}",
-                "attributes" : {
-                  "availableInNewTerritories" : false
-                },
-                "relationships" : {
-                  "availableTerritories" : {
-                    "links" : {
-                      "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/relationships/availableTerritories",
-                      "related" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/availableTerritories"
-                    }
+              type: "inAppPurchaseAvailabilities",
+              id: "#{purchase_id}",
+              attributes: attributes,
+              relationships: {
+                availableTerritories: {
+                  links: {
+                    "self" => "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/relationships/availableTerritories",
+                    related: "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/availableTerritories"
                   }
-                },
-                "links" : {
-                  "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}"
                 }
               },
-              "links" : {
-                "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities"
+              links: {
+                "self" => "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}"
               }
+            },
+            links: {
+              "self" => "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities"
             }
           }
 
