@@ -360,17 +360,26 @@ module Spaceship
           attributes[:availableInNewTerritories] = false
           params = {
             data: {
-              type: "inAppPurchaseAvailabilities",
-              attributes: attributes,
-              relationships: {
-                availableTerritories: {
+              "data" : {
+                "type" : "inAppPurchaseAvailabilities",
+                "id" : "#{purchase_id}",
+                "attributes" : {
+                  "availableInNewTerritories" : false
                 },
-                inAppPurchase: {
-                  data: {
-                    id: purchase_id,
-                    type: "inAppPurchases"
+                "relationships" : {
+                  "availableTerritories" : {
+                    "links" : {
+                      "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/relationships/availableTerritories",
+                      "related" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}/availableTerritories"
+                    }
                   }
+                },
+                "links" : {
+                  "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities/#{purchase_id}"
                 }
+              },
+              "links" : {
+                "self" : "https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities"
               }
             }
           }
@@ -384,7 +393,7 @@ module Spaceship
             params[:data][:relationships][:availableTerritories][:data] << territoryBody
           end
 
-          iap_request_client.post("https://api.appstoreconnect.apple.com/v1/inAppPurchaseAvailabilities", params)
+          iap_request_client.post("https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities", params)
         end
 
         def delete_in_app_purchase_app_store_review_screenshot(screenshot_id:)
