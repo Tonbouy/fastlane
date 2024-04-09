@@ -364,7 +364,6 @@ module Spaceship
               attributes: attributes,
               relationships: {
                 availableTerritories: {
-                  data: [] # Filled with loop below
                 },
                 inAppPurchase: {
                   data: {
