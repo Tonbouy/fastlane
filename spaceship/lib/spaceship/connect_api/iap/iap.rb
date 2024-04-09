@@ -389,7 +389,7 @@ module Spaceship
             params[:data][:relationships][:availableTerritories][:data] << territoryBody
           end
 
-          iap_request_client.post("https://appstoreconnect.apple.com/iris/v1/inAppPurchaseAvailabilities", params)
+          iap_request_client.post("https://api.appstoreconnect.apple.com/v1/inAppPurchaseAvailabilities", params)
         end
 
         def delete_in_app_purchase_app_store_review_screenshot(screenshot_id:)
